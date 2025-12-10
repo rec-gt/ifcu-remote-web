@@ -160,12 +160,13 @@
       }
 
       async function setMode(id, mode) {
-        await fetch(`/broker/set-hr?id=${id}&mode=${mode}`);
+        await fetch(`/broker/set-hr?id=${id}&mode=${mode.value}`);
         isStopQuery = false;
       }
 
-      async function setFanSpeed(id, value) {
-        await fetch(`/broker/set-hr?id=${id}&pos=3&value=${value}`);
+      async function setFanSpeed(id, speed) {
+        await fetch(`/broker/set-hr?id=${id}&pos=3&speed=${speed.value}`);
+        isStopQuery = false;
       }
 
       async function fetchData() {
@@ -226,6 +227,7 @@
           const onOff = fullsetData[i].HR[0];
           const roomTemp = fullsetData[i].IR[0];
           const setTemp = fullsetData[i].HR[1];
+          const mode = fullsetData[i].HR[2];
 
           const header = `
               <div class="flex bar">
@@ -270,17 +272,17 @@
                 <div class="flex">
                   <div class="center">
                     <div class="center" style="height: 50px">
-                      <select class="mode" onfocus="isStopQuery=true" onfocusout="isStopQuery=false" onchange="setMode(this)">
-                        <option value="0">Auto</option>
-                        <option value="1">Manual</option>
-                        <option value="2">Fan</option>
+                      <select class="mode" onfocus="isStopQuery=true" onfocusout="isStopQuery=false" onchange="setMode(${id},this)">
+                        <option value="0" ${mode == 0 ? 'selected' : ''}>Auto</option>
+                        <option value="1" ${mode == 1 ? 'selected' : ''}>Manual</option>
+                        <option value="2" ${mode == 2 ? 'selected' : ''}>Fan</option>
                       </select>
                     </div>
                   </div>
 
                   <div class="center">
                     <div class="center" style="height: 50px">
-                      <select class="fan-speed" onchange="setFanSpeed(this)">
+                      <select class="fan-speed" onfocus="isStopQuery=true" onfocusout="isStopQuery=false" onchange="setFanSpeed(${id},this)">
                         <option value="0">Low</option>
                         <option value="1">Medium</option>
                         <option value="2">High</option>
