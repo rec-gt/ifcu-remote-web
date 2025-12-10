@@ -14,12 +14,18 @@ export class BrokerController {
   setHR(
     @Query('id') id: number,
     @Query('pos') pos: number,
+    @Query('power') power: number,
     @Query('setTempIncrease') setTempIncrease: number,
     @Query('setTempDecrease') setTempDecrease: number,
     @Query('mode') mode: number,
     @Query('speed') speed: number,
     @Query('value') value: number,
   ) {
+    if (power) {
+      this.brokerService.data[id].HR[0] =
+        this.brokerService.data[id].HR[0] == 0 ? 1 : 0;
+    }
+
     if (setTempIncrease) {
       this.brokerService.data[id].HR[1] += 50;
     }

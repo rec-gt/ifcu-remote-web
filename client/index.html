@@ -147,8 +147,8 @@
         document.getElementById('fan-speed').value = fanSpeed;
       }
 
-      async function setOnOff(id, value) {
-        await fetch(`/broker/set-hr?id=${id}&pos=0&value=${value}`);
+      async function setOnOff(id, power) {
+        await fetch(`/broker/set-hr?id=${id}&power=${power}`);
       }
 
       async function setSetPointTemperature(id, action) {
@@ -159,8 +159,8 @@
         }
       }
 
-      async function setMode(id, value) {
-        await fetch(`/broker/set-hr?id=${id}&pos=2&value=${value}`);
+      async function setMode(id, mode) {
+        await fetch(`/broker/set-hr?id=${id}&mode=${mode}`);
       }
 
       async function setFanSpeed(id, value) {
