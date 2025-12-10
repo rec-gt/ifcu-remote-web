@@ -21,19 +21,12 @@ export class BrokerController {
     @Query('value') value: number,
   ) {
     if (setTempIncrease) {
-      console.log(setTempIncrease);
-      this.brokerService.setHR(id, pos, value);
+      this.brokerService.data[id].HR[1] += 50;
     }
 
     if (setTempDecrease) {
-      console.log(setTempDecrease);
-      this.brokerService.setHR(id, pos, value);
+      this.brokerService.data[id].HR[1] -= 50;
     }
-
-    console.log(mode);
-    console.log(speed);
-
-    return this.brokerService.setHR(id, pos, value);
   }
 
   @Get('get-hr') // API for ESP32 to update it's own HR

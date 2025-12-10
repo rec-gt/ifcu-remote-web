@@ -220,6 +220,7 @@
           const id = fullsetData[i].id;
           const name = fullsetData[i].name;
           const onOff = fullsetData[i].HR[0];
+          const setTemp = fullsetData[i].HR[1];
 
           const header = `
               <div class="flex bar">
@@ -248,10 +249,10 @@
                     </div>
                   </div>
                   <div class="center" style="justify-content: space-between">
-                    <div class="switch" onclick="setSetPointTemperature(${id},-50)">◀</div>
-                    <div id="set-point">25.5</div>
+                    <div class="switch" onclick="setSetPointTemperature(${id},-1)">◀</div>
+                    <div id="set-point">${(setTemp / 100).toFixed(2)}</div>
                     <div>°C</div>
-                    <div class="switch" onclick="setSetPointTemperature(${id},50)">▶</div>
+                    <div class="switch" onclick="setSetPointTemperature(${id},1)">▶</div>
                   </div>
                 </div>
               </div>
