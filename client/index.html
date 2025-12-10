@@ -151,8 +151,12 @@
         await fetch(`/broker/set-hr?id=${id}&pos=0&value=${value}`);
       }
 
-      async function setSetPointTemperature(id, value) {
-        await fetch(`/broker/set-hr?id=${id}&pos=1&value=${value}`);
+      async function setSetPointTemperature(id, action) {
+        if (action == 1) {
+          await fetch(`/broker/set-hr?id=${id}&setTempIncrease=1`);
+        } else {
+          await fetch(`/broker/set-hr?id=${id}&setTempDecrease=1`);
+        }
       }
 
       async function setMode(id, value) {
@@ -213,12 +217,13 @@
         parent.innerHTML = '';
 
         for (let i = 0; i < fullsetData.length; i++) {
-          const id = fullsetData[i].ID;
+          const id = fullsetData[i].id;
+          const name = fullsetData[i].name;
           const onOff = fullsetData[i].HR[0];
 
           const header = `
               <div class="flex bar">
-                <div>${id}</div>
+                <div>${name}</div>
                 <div class="flex" style="gap: 1rem">
                     <div class="${onOff == 1 ? 'on-off-active' : 'on-off'}" onclick="setOnOff(${id},${1})">ON</div>
                     <div class="${onOff == 0 ? 'on-off-active' : 'on-off'}" onclick="setOnOff(${id},${0})">OFF</div>

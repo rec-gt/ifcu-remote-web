@@ -14,8 +14,25 @@ export class BrokerController {
   setHR(
     @Query('id') id: number,
     @Query('pos') pos: number,
+    @Query('setTempIncrease') setTempIncrease: number,
+    @Query('setTempDecrease') setTempDecrease: number,
+    @Query('mode') mode: number,
+    @Query('speed') speed: number,
     @Query('value') value: number,
   ) {
+    if (setTempIncrease) {
+      console.log(setTempIncrease);
+      this.brokerService.setHR(id, pos, value);
+    }
+
+    if (setTempDecrease) {
+      console.log(setTempDecrease);
+      this.brokerService.setHR(id, pos, value);
+    }
+
+    console.log(mode);
+    console.log(speed);
+
     return this.brokerService.setHR(id, pos, value);
   }
 
