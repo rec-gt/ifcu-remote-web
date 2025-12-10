@@ -99,8 +99,8 @@
         cursor: pointer;
       }
 
-      #mode,
-      #fan-speed {
+      .mode,
+      .fan-speed {
         text-align: center;
         width: 120px;
         padding: 8px 12px;
@@ -161,6 +161,7 @@
 
       async function setMode(id, mode) {
         await fetch(`/broker/set-hr?id=${id}&mode=${mode}`);
+        isStopQuery = false;
       }
 
       async function setFanSpeed(id, value) {
@@ -197,8 +198,11 @@
         }
       }
 
+      let isStopQuery = false;
       setInterval(() => {
-        fetchAll();
+        if (!isStopQuery) {
+          fetchAll();
+        }
       }, 1000);
     </script>
 
@@ -220,6 +224,7 @@
           const id = fullsetData[i].id;
           const name = fullsetData[i].name;
           const onOff = fullsetData[i].HR[0];
+          const roomTemp = fullsetData[i].IR[0];
           const setTemp = fullsetData[i].HR[1];
 
           const header = `
@@ -244,7 +249,7 @@
                 <div class="flex">
                   <div class="center">
                     <div class="center room-temp">
-                      <div id="room-temp">22.2</div>
+                      <div>${roomTemp}</div>
                       <div>°C</div>
                     </div>
                   </div>
@@ -265,7 +270,7 @@
                 <div class="flex">
                   <div class="center">
                     <div class="center" style="height: 50px">
-                      <select id="mode" onchange="setMode(this)">
+                      <select class="mode" onfocus="isStopQuery=true" onfocusout="isStopQuery=false" onchange="setMode(this)">
                         <option value="0">Auto</option>
                         <option value="1">Manual</option>
                         <option value="2">Fan</option>
@@ -275,7 +280,7 @@
 
                   <div class="center">
                     <div class="center" style="height: 50px">
-                      <select id="fan-speed" onchange="setFanSpeed(this)">
+                      <select class="fan-speed" onchange="setFanSpeed(this)">
                         <option value="0">Low</option>
                         <option value="1">Medium</option>
                         <option value="2">High</option>
