@@ -74,7 +74,7 @@ export class BrokerService {
   async getHR(id: number) {
     if (!this.database[id].data.hr.isConsumpted) {
       this.database[id].data.hr.isConsumpted = true
-      return this.database[id].data.hr.browser
+      return [1, ...this.database[id].data.hr.browser]
     }
 
     return null
