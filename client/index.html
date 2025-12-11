@@ -228,6 +228,7 @@
           const roomTemp = fullsetData[i].IR[0];
           const setTemp = fullsetData[i].HR[1];
           const mode = fullsetData[i].HR[2];
+          const speed = fullsetData[i].HR[3];
 
           const header = `
               <div class="flex bar">
@@ -283,9 +284,9 @@
                   <div class="center">
                     <div class="center" style="height: 50px">
                       <select class="fan-speed" onfocus="isStopQuery=true" onfocusout="isStopQuery=false" onchange="setFanSpeed(${id},this)">
-                        <option value="0">Low</option>
-                        <option value="1">Medium</option>
-                        <option value="2">High</option>
+                        <option value="0" ${speed == 0 ? 'selected' : ''}>Low</option>
+                        <option value="1" ${speed == 1 ? 'selected' : ''}>Medium</option>
+                        <option value="2" ${speed == 2 ? 'selected' : ''}>High</option>
                       </select>
                     </div>
                   </div>

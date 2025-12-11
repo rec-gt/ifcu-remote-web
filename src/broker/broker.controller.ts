@@ -39,6 +39,7 @@ export class BrokerController {
     }
 
     if (speed) {
+      console.log(speed);
       this.brokerService.data[id].HR[3] = speed;
     }
   }
