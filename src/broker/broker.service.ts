@@ -85,6 +85,12 @@ export class BrokerService {
     }
 
     this.database[id].data.hr.server = [...this.database[id].data.hr.device]
+    if (this.database[id].data.hr.isConsumpted) {
+      this.database[id].data.hr.browser = [...this.database[id].data.hr.device]
+      console.log(this.database[id].data.hr.server)
+      console.log(this.database[id].data.hr.device)
+      console.log(this.database[id].data.hr.browser)
+    }
   }
 
   async getHR(id: number) {
