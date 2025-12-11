@@ -192,13 +192,16 @@
         parent.innerHTML = '';
 
         for (let i = 0; i < fullsetData.length; i++) {
-          const id = fullsetData[i].id;
-          const name = fullsetData[i].name;
-          const onOff = fullsetData[i].data.hr.browser[0];
-          const roomTemp = fullsetData[i].data.ir.device[0];
-          const setTemp = fullsetData[i].data.hr.browser[1];
-          const mode = fullsetData[i].data.hr.browser[2];
-          const speed = fullsetData[i].data.hr.browser[3];
+          const {
+            id,
+            name,
+            data: { hr, ir },
+          } = fullsetData[i];
+          const onOff = hr.browser ? hr.browser[0] : hr.server[0];
+          const roomTemp = ir.device[0];
+          const setTemp = hr.browser ? hr.browser[1] : hr.server[1];
+          const mode = hr.browser ? hr.browser[2] : hr.server[2];
+          const speed = hr.browser ? hr.browser[3] : hr.server[3];
 
           const header = `
               <div class="flex bar">

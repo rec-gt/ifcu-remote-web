@@ -3,11 +3,11 @@ import { BrokerService } from './broker.service';
 
 @Controller('broker')
 export class BrokerController {
-  constructor(private readonly brokerService: BrokerService) {}
+  constructor(private readonly brokerService: BrokerService) { }
 
   @Get('get-all') // API for browser
   async getAll() {
-    return this.brokerService.getAll();
+    return await this.brokerService.getDisplayData();
   }
 
   @Get('set-hr') // API for browser
@@ -19,25 +19,8 @@ export class BrokerController {
     @Query('mode') mode: number,
     @Query('speed') speed: number,
   ) {
-    if (power) {
-      this.brokerService.setHR(id, 0, power);
-    }
+    await this.brokerService.setHR(id, power, setTempIncrease, setTempDecrease, mode, speed);
 
-    if (setTempIncrease) {
-      this.brokerService.data[id].HR[1] += 50;
-    }
-
-    if (setTempDecrease) {
-      this.brokerService.data[id].HR[1] -= 50;
-    }
-
-    if (mode) {
-      this.brokerService.data[id].HR[2] = mode;
-    }
-
-    if (speed) {
-      this.brokerService.data[id].HR[3] = speed;
-    }
   }
 
   @Get('get-hr/:id')

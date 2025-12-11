@@ -2,17 +2,17 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class BrokerService {
-  database = [
+  database: any = [
     {
       id: 0,
       name: 'IFCU-00',
       data: {
         ir: {
-          device: [0, 0, 0, 0, 0],
+          device: [2200, 0, 0, 0, 0],
         },
         hr: {
           device: [0, 2500, 0, 0],
-          browser: [0, 2500, 0, 0],
+          browser: null,
           server: [0, 2500, 0, 0],
         },
       },
@@ -22,45 +22,51 @@ export class BrokerService {
       name: 'IFCU-01',
       data: {
         ir: {
-          device: [0, 0, 0, 0, 0],
+          device: [2200, 0, 0, 0, 0],
         },
         hr: {
           device: [0, 2500, 0, 0],
-          browser: [0, 2500, 0, 0],
+          browser: null,
           server: [0, 2500, 0, 0],
         },
       },
     },
   ];
 
-  data: any = [
-    { id: 0, name: 'IFCU-00', HR: [0, 2500, 0, 0], IR: [0, 0, 0, 0, 0] },
-    { id: 1, name: 'IFCU-01', HR: [0, 2500, 0, 0], IR: [0, 0, 0, 0, 0] },
-    { id: 2, name: 'IFCU-02', HR: [0, 2500, 0, 0], IR: [0, 0, 0, 0, 0] },
-    { id: 3, name: 'IFCU-03', HR: [0, 2500, 0, 0], IR: [0, 0, 0, 0, 0] },
-    { id: 4, name: 'IFCU-04', HR: [0, 2500, 0, 0], IR: [0, 0, 0, 0, 0] },
-    { id: 5, name: 'IFCU-05', HR: [0, 2500, 0, 0], IR: [0, 0, 0, 0, 0] },
-    { id: 6, name: 'IFCU-06', HR: [0, 2500, 0, 0], IR: [0, 0, 0, 0, 0] },
-  ];
-
-  getHello(): string {
-    return 'iFCU Web OK';
-  }
-
-  getAll() {
+  async getDisplayData() {
     return this.database;
   }
 
-  setHR(id: number, pos: number, value: any) {
-    this.database[id].data.hr.browser[pos] = value;
-    console.log(this.database)
+  async setHR(id, power, setTempIncrease, setTempDecrease, mode, speed) {
+    if (!this.database[id].data.hr.browser) {
+      this.database[id].data.hr.browser = this.database[id].data.hr.server
+    }
+
+    if (power) {
+      this.database[id].data.hr.browser[0] = power
+    }
+
+    if (setTempIncrease) {
+      this.database[id].data.hr.browser[1] += 50;
+    }
+
+    if (setTempDecrease) {
+      this.database[id].data.hr.browser[1] -= 50;
+    }
+
+    if (mode) {
+      this.database[id].data.hr.browser[2] = mode;
+    }
+
+    if (speed) {
+      this.database[id].data.hr.browser[3] = speed;
+    }
   }
 
   getHR(id: number) {
-    return this.data[id].HR;
+    this.database[id].data.hr.browser = null;
+
   }
 
-  setIR(id: number, pos: number, value: any) {
-    this.data[id].IR[pos] = value;
-  }
+  setIR(id: number, pos: number, value: any) { }
 }
