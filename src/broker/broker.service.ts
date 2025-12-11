@@ -66,9 +66,15 @@ export class BrokerService {
 
   async getHR(id: number) {
     // if changed, then allow device to update its own HRs
-    if (!isEqual(this.database[id].data.hr.browser, this.database[id].data.hr.server)) {
+    const s = this.database[id].data.hr.server
+    const b = this.database[id].data.hr.browser
 
+    if (!isEqual(s, b)) {
+      return b
+    } else {
+      return null
     }
+
     // console.log(id)
     // this.database[id].data.hr.browser = null;
     // console.log(this.database[id].data.hr.browser, this.database[id].data.hr.server)
