@@ -159,13 +159,13 @@
         }
       }
 
-      async function setMode(id, mode) {
-        await fetch(`/broker/set-hr?id=${id}&mode=${mode.value}`);
+      async function setMode(id, elem) {
+        await fetch(`/broker/set-hr?id=${id}&mode=${elem.value}`);
         isStopQuery = false;
       }
 
-      async function setFanSpeed(id, speed) {
-        await fetch(`/broker/set-hr?id=${id}&pos=3&speed=${speed.value}`);
+      async function setFanSpeed(id, elem) {
+        await fetch(`/broker/set-hr?id=${id}&speed=${elem.value}`);
         isStopQuery = false;
       }
 

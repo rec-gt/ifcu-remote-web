@@ -33,6 +33,14 @@ export class BrokerController {
     if (setTempDecrease) {
       this.brokerService.data[id].HR[1] -= 50;
     }
+
+    if (mode) {
+      this.brokerService.data[id].HR[2] = mode;
+    }
+
+    if (speed) {
+      this.brokerService.data[id].HR[3] = speed;
+    }
   }
 
   @Get('get-hr') // API for ESP32 to update it's own HR
