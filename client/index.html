@@ -180,7 +180,7 @@
     <script>
       async function fetchAll() {
         try {
-          const fullsetData = await fetch(`broker/get-all`);
+          const fullsetData = await fetch(`/broker/get-all`);
           renderAllData(await fullsetData.json());
         } catch (error) {
           console.error('Error in cmd:', error);
