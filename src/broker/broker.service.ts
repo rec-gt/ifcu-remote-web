@@ -67,7 +67,7 @@ export class BrokerService {
     this.database[id].data.hr.isConsumpted = false
   }
 
-  async setHRByDevice(id: string, power: string, setTemp: string, mode: string, speed: string) {
+  async setHRByDevice(id: string, pass: string, power: string, setTemp: string, mode: string, speed: string) {
     if (power) {
       this.database[id].data.hr.device[0] = parseInt(power)
     }
@@ -84,16 +84,22 @@ export class BrokerService {
       this.database[id].data.hr.device[3] = parseInt(speed);
     }
 
+
+
     this.database[id].data.hr.server = [...this.database[id].data.hr.device]
-    if (this.database[id].data.hr.isConsumpted) {
+    if (pass == this.database[id].data.hr.pass) {
       this.database[id].data.hr.browser = [...this.database[id].data.hr.device]
     }
+
   }
 
   async getHR(id: number) {
     if (!this.database[id].data.hr.isConsumpted) {
+      this.database[id].data.hr.pass = 1
       this.database[id].data.hr.isConsumpted = true
       return [1, ...this.database[id].data.hr.browser]
+    } else {
+      this.database[id].data.hr.pass = 0
     }
 
     return null
