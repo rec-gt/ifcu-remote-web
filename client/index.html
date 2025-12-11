@@ -148,24 +148,24 @@
       }
 
       async function setOnOff(id, power) {
-        await fetch(`/broker/set-hr?id=${id}&power=${power}`);
+        await fetch(`/broker/set-hr-browser?id=${id}&power=${power}`);
       }
 
       async function setSetPointTemperature(id, action) {
         if (action == 1) {
-          await fetch(`/broker/set-hr?id=${id}&setTempIncrease=1`);
+          await fetch(`/broker/set-hr-browser?id=${id}&setTempIncrease=1`);
         } else {
-          await fetch(`/broker/set-hr?id=${id}&setTempDecrease=1`);
+          await fetch(`/broker/set-hr-browser?id=${id}&setTempDecrease=1`);
         }
       }
 
       async function setMode(id, elem) {
-        await fetch(`/broker/set-hr?id=${id}&mode=${elem.value}`);
+        await fetch(`/broker/set-hr-browser?id=${id}&mode=${elem.value}`);
         isStopQuery = false;
       }
 
       async function setFanSpeed(id, elem) {
-        await fetch(`/broker/set-hr?id=${id}&speed=${elem.value}`);
+        await fetch(`/broker/set-hr-browser?id=${id}&speed=${elem.value}`);
         isStopQuery = false;
       }
 

@@ -38,7 +38,7 @@ export class BrokerService {
     return this.database;
   }
 
-  async setHR(id, power, setTempIncrease, setTempDecrease, mode, speed) {
+  async setHRByBrowser(id: number, power: number, setTempIncrease: number, setTempDecrease: number, mode: number, speed: number) {
     if (!this.database[id].data.hr.browser) {
       this.database[id].data.hr.browser = { ...this.database[id].data.hr.server }
     }
@@ -64,21 +64,23 @@ export class BrokerService {
     }
   }
 
+  async setHRByDevice(id: number, data: string) {
+
+  }
+
   async getHR(id: number) {
     // if changed, then allow device to update its own HRs
     const s = this.database[id].data.hr.server
     const b = this.database[id].data.hr.browser
 
-    if (!isEqual(s, b)) {
+    if (!isEqual(s, b) && b != null) {
       return b
-    } else {
-      return null
     }
 
-    // console.log(id)
-    // this.database[id].data.hr.browser = null;
-    // console.log(this.database[id].data.hr.browser, this.database[id].data.hr.server)
+    return null
   }
+
+
 
   setIR(id: number, pos: number, value: any) { }
 }

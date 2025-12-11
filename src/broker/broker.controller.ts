@@ -10,8 +10,8 @@ export class BrokerController {
     return await this.brokerService.getDisplayData();
   }
 
-  @Get('set-hr') // API for browser
-  async setHR(
+  @Get('set-hr-browser') // API for browser
+  async setHRByBrowser(
     @Query('id') id: number,
     @Query('power') power: number,
     @Query('setTempIncrease') setTempIncrease: number,
@@ -19,8 +19,16 @@ export class BrokerController {
     @Query('mode') mode: number,
     @Query('speed') speed: number,
   ) {
-    await this.brokerService.setHR(id, power, setTempIncrease, setTempDecrease, mode, speed);
+    await this.brokerService.setHRByBrowser(id, power, setTempIncrease, setTempDecrease, mode, speed);
+  }
 
+
+  @Get('set-hr-device') // API for browser
+  async setHRByDevice(
+    @Query('id') id: number,
+    @Query('data') data: string,
+  ) {
+    await this.brokerService.setHRByDevice(id, data);
   }
 
   @Get('get-hr/:id')
