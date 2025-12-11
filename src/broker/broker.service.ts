@@ -40,7 +40,7 @@ export class BrokerService {
 
   async setHRByBrowser(id: number, power: number, setTempIncrease: number, setTempDecrease: number, mode: number, speed: number) {
     if (!this.database[id].data.hr.browser) {
-      this.database[id].data.hr.browser = { ...this.database[id].data.hr.server }
+      this.database[id].data.hr.browser = [...this.database[id].data.hr.server]
     }
 
     if (power) {
@@ -72,6 +72,9 @@ export class BrokerService {
     // if changed, then allow device to update its own HRs
     const s = this.database[id].data.hr.server
     const b = this.database[id].data.hr.browser
+
+    console.log(s)
+    console.log(b)
 
     if (!isEqual(s, b) && b != null) {
       return b
