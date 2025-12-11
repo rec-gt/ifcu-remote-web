@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { BrokerService } from './broker.service';
 
 @Controller('broker')
@@ -43,13 +43,13 @@ export class BrokerController {
     }
   }
 
-  @Get('get-hr') // API for ESP32 to update it's own HR
-  getHR() {
-    return this.brokerService.getHR(0);
+  @Get('get-hr/:id')
+  async getHR(@Param('id') id: number) {
+    return await this.brokerService.getHR(id);
   }
 
   @Get('set-ir') // API for ESP32 to upload their IR to server
-  setIR() {
-    return this.brokerService.setIR(0, 0, 1);
+  async setIR() {
+    return await this.brokerService.setIR(0, 0, 1);
   }
 }
