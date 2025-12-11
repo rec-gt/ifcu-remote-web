@@ -20,8 +20,7 @@ export class BrokerController {
     @Query('speed') speed: number,
   ) {
     if (power) {
-      this.brokerService.data[id].HR[0] =
-        this.brokerService.data[id].HR[0] == 0 ? 1 : 0;
+      this.brokerService.setHR(id, 0, power);
     }
 
     if (setTempIncrease) {

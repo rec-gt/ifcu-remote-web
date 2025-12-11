@@ -48,11 +48,12 @@ export class BrokerService {
   }
 
   getAll() {
-    return this.data;
+    return this.database;
   }
 
   setHR(id: number, pos: number, value: any) {
     this.database[id].data.hr.browser[pos] = value;
+    console.log(this.database)
   }
 
   getHR(id: number) {

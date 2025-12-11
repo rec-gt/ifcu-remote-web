@@ -169,36 +169,6 @@
         isStopQuery = false;
       }
 
-      async function fetchData() {
-        try {
-          const response = await fetch('/data');
-          let data = JSON.parse(await response.text());
-
-          roomTemp = data[1];
-          if (!finishInitFetch) {
-            onOff = data[0];
-            spt = data[2];
-            mode = data[3];
-            fanSpeed = data[4];
-          }
-
-          rerenderData();
-
-          finishInitFetch = true;
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      }
-
-      async function pushData() {
-        try {
-          const str = `${parseInt(onOff)}${spt}${mode}${fanSpeed}`;
-          const response = await fetch(`/push?v=${str}`);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      }
-
       let isStopQuery = false;
       setInterval(() => {
         if (!isStopQuery) {
@@ -224,11 +194,11 @@
         for (let i = 0; i < fullsetData.length; i++) {
           const id = fullsetData[i].id;
           const name = fullsetData[i].name;
-          const onOff = fullsetData[i].HR[0];
-          const roomTemp = fullsetData[i].IR[0];
-          const setTemp = fullsetData[i].HR[1];
-          const mode = fullsetData[i].HR[2];
-          const speed = fullsetData[i].HR[3];
+          const onOff = fullsetData[i].data.hr.browser[0];
+          const roomTemp = fullsetData[i].data.ir.device[0];
+          const setTemp = fullsetData[i].data.hr.browser[1];
+          const mode = fullsetData[i].data.hr.browser[2];
+          const speed = fullsetData[i].data.hr.browser[3];
 
           const header = `
               <div class="flex bar">
