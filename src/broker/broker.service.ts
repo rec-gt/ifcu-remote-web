@@ -84,10 +84,10 @@ export class BrokerService {
       this.database[id].data.hr.device[3] = parseInt(speed);
     }
 
-
-
-    this.database[id].data.hr.server = [...this.database[id].data.hr.device]
     if (pass == this.database[id].data.hr.pass) {
+      this.database[id].data.hr.server = [...this.database[id].data.hr.device]
+    } else {
+      this.database[id].data.hr.server = [...this.database[id].data.hr.device]
       this.database[id].data.hr.browser = [...this.database[id].data.hr.device]
     }
 
