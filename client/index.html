@@ -225,13 +225,13 @@
                 <div class="flex">
                   <div class="center">
                     <div class="center room-temp">
-                      <div>${roomTemp}</div>
+                      <div>${(roomTemp / 100).toFixed(1)}</div>
                       <div>°C</div>
                     </div>
                   </div>
                   <div class="center" style="justify-content: space-between">
                     <div class="switch" onclick="setSetPointTemperature(${id},-1)">◀</div>
-                    <div id="set-point">${(setTemp / 100).toFixed(2)}</div>
+                    <div id="set-point">${(setTemp / 100).toFixed(1)}</div>
                     <div>°C</div>
                     <div class="switch" onclick="setSetPointTemperature(${id},1)">▶</div>
                   </div>
