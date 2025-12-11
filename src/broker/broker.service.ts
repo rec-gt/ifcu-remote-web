@@ -38,13 +38,13 @@ export class BrokerService {
     return this.database;
   }
 
-  async setHRByBrowser(id: number, power: number, setTempIncrease: number, setTempDecrease: number, mode: number, speed: number) {
+  async setHRByBrowser(id: string, power: string, setTempIncrease: string, setTempDecrease: string, mode: string, speed: string) {
     if (!this.database[id].data.hr.browser) {
       this.database[id].data.hr.browser = [...this.database[id].data.hr.server]
     }
 
     if (power) {
-      this.database[id].data.hr.browser[0] = power
+      this.database[id].data.hr.browser[0] = parseInt(power)
     }
 
     if (setTempIncrease) {
@@ -56,11 +56,11 @@ export class BrokerService {
     }
 
     if (mode) {
-      this.database[id].data.hr.browser[2] = mode;
+      this.database[id].data.hr.browser[2] = parseInt(mode);
     }
 
     if (speed) {
-      this.database[id].data.hr.browser[3] = speed;
+      this.database[id].data.hr.browser[3] = parseInt(speed);
     }
   }
 

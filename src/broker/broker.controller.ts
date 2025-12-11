@@ -12,12 +12,12 @@ export class BrokerController {
 
   @Get('set-hr-browser') // API for browser
   async setHRByBrowser(
-    @Query('id') id: number,
-    @Query('power') power: number,
-    @Query('setTempIncrease') setTempIncrease: number,
-    @Query('setTempDecrease') setTempDecrease: number,
-    @Query('mode') mode: number,
-    @Query('speed') speed: number,
+    @Query('id') id: string,
+    @Query('power') power: string,
+    @Query('setTempIncrease') setTempIncrease: string,
+    @Query('setTempDecrease') setTempDecrease: string,
+    @Query('mode') mode: string,
+    @Query('speed') speed: string,
   ) {
     await this.brokerService.setHRByBrowser(id, power, setTempIncrease, setTempDecrease, mode, speed);
   }
