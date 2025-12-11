@@ -2,6 +2,37 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class BrokerService {
+  database = [
+    {
+      id: 0,
+      name: 'IFCU-00',
+      data: {
+        ir: {
+          device: [0, 0, 0, 0, 0],
+        },
+        hr: {
+          device: [0, 2500, 0, 0],
+          browser: [0, 2500, 0, 0],
+          server: [0, 2500, 0, 0],
+        },
+      },
+    },
+    {
+      id: 1,
+      name: 'IFCU-01',
+      data: {
+        ir: {
+          device: [0, 0, 0, 0, 0],
+        },
+        hr: {
+          device: [0, 2500, 0, 0],
+          browser: [0, 2500, 0, 0],
+          server: [0, 2500, 0, 0],
+        },
+      },
+    },
+  ];
+
   data: any = [
     { id: 0, name: 'IFCU-00', HR: [0, 2500, 0, 0], IR: [0, 0, 0, 0, 0] },
     { id: 1, name: 'IFCU-01', HR: [0, 2500, 0, 0], IR: [0, 0, 0, 0, 0] },
@@ -21,8 +52,7 @@ export class BrokerService {
   }
 
   setHR(id: number, pos: number, value: any) {
-    this.data[id].HR[pos] = value;
-    console.log(this.data);
+    this.database[id].data.hr.browser[pos] = value;
   }
 
   getHR(id: number) {

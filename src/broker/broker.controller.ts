@@ -6,20 +6,18 @@ export class BrokerController {
   constructor(private readonly brokerService: BrokerService) {}
 
   @Get('get-all') // API for browser
-  getAll() {
+  async getAll() {
     return this.brokerService.getAll();
   }
 
   @Get('set-hr') // API for browser
-  setHR(
+  async setHR(
     @Query('id') id: number,
-    @Query('pos') pos: number,
     @Query('power') power: number,
     @Query('setTempIncrease') setTempIncrease: number,
     @Query('setTempDecrease') setTempDecrease: number,
     @Query('mode') mode: number,
     @Query('speed') speed: number,
-    @Query('value') value: number,
   ) {
     if (power) {
       this.brokerService.data[id].HR[0] =
@@ -50,6 +48,6 @@ export class BrokerController {
 
   @Get('set-ir') // API for ESP32 to upload their IR to server
   async setIR() {
-    return await this.brokerService.setIR(0, 0, 1);
+    this.brokerService.setIR(0, 0, 1);
   }
 }
