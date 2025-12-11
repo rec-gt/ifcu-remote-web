@@ -97,7 +97,7 @@ export class BrokerService {
     if (!this.database[id].data.hr.isConsumpted) {
       this.database[id].data.hr.pass = 1
       this.database[id].data.hr.isConsumpted = true
-      return [1, ...this.database[id].data.hr.browser]
+      return [this.database[id].data.hr.pass, ...this.database[id].data.hr.browser]
     } else {
       this.database[id].data.hr.pass = 0
     }
