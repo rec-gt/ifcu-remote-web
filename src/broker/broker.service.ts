@@ -67,7 +67,7 @@ export class BrokerService {
     this.database[id].data.hr.isConsumpted = false
   }
 
-  async setHRByDevice(id: number, data: string) {
+  async setHRByDevice(id: string, power: string, setTemp: string, mode: string, speed: string) {
 
   }
 
