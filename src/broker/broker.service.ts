@@ -5,7 +5,7 @@ export class BrokerService {
   database: any = [
     {
       id: 0,
-      name: 'IFCU-00',
+      name: 'IFCU-01',
       data: {
         ir: {
           device: [2200, 0, 0, 0, 0],
@@ -20,7 +20,7 @@ export class BrokerService {
     },
     {
       id: 1,
-      name: 'IFCU-01',
+      name: 'IFCU-02',
       data: {
         ir: {
           device: [2200, 0, 0, 0, 0],
@@ -85,13 +85,9 @@ export class BrokerService {
     }
 
     this.database[id].data.hr.server = [...this.database[id].data.hr.device]
-    // if (this.database[id].data.hr.isConsumpted) {
-    //   this.database[id].data.hr.browser = [...this.database[id].data.hr.device]
-    //   console.log("======================")
-    //   console.log(this.database[id].data.hr.server)
-    //   console.log(this.database[id].data.hr.device)
-    //   console.log(this.database[id].data.hr.browser)
-    // }
+    if (this.database[id].data.hr.isConsumpted) {
+      this.database[id].data.hr.browser = [...this.database[id].data.hr.device]
+    }
   }
 
   async getHR(id: number) {
