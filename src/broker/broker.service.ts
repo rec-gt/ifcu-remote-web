@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { isEqual } from 'lodash-es';
 
 @Injectable()
 export class BrokerService {
@@ -13,8 +12,9 @@ export class BrokerService {
         },
         hr: {
           device: [0, 2500, 0, 0],
-          browser: null,
+          browser: [0, 2500, 0, 0],
           server: [0, 2500, 0, 0],
+          isConsumpted: false,
         },
       },
     },
@@ -27,8 +27,9 @@ export class BrokerService {
         },
         hr: {
           device: [0, 2500, 0, 0],
-          browser: null,
+          browser: [0, 2500, 0, 0],
           server: [0, 2500, 0, 0],
+          isConsumpted: false,
         },
       },
     },
@@ -62,6 +63,8 @@ export class BrokerService {
     if (speed) {
       this.database[id].data.hr.browser[3] = parseInt(speed);
     }
+
+    this.database[id].data.hr.isConsumpted = false
   }
 
   async setHRByDevice(id: number, data: string) {
@@ -69,15 +72,9 @@ export class BrokerService {
   }
 
   async getHR(id: number) {
-    // if changed, then allow device to update its own HRs
-    const s = this.database[id].data.hr.server
-    const b = this.database[id].data.hr.browser
-
-    console.log(s)
-    console.log(b)
-
-    if (!isEqual(s, b) && b != null) {
-      return b
+    if (!this.database[id].data.hr.isConsumpted) {
+      this.database[id].data.hr.isConsumpted = true
+      return this.database[id].data.hr.browser
     }
 
     return null
