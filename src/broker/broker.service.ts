@@ -15,6 +15,7 @@ export class BrokerService {
           browser: [0, 2500, 0, 0],
           server: [0, 2500, 0, 0],
           isConsumpted: false,
+          counter: 5
         },
       },
     },
@@ -30,12 +31,12 @@ export class BrokerService {
           browser: [0, 2500, 0, 0],
           server: [0, 2500, 0, 0],
           isConsumpted: false,
+          counter: 8
         },
       },
     },
   ];
 
-  counter = 5
 
   async getDisplayData() {
     return this.database;
@@ -67,6 +68,7 @@ export class BrokerService {
     }
 
     this.database[id].data.hr.isConsumpted = false
+    this.database[id].data.hr.counter = 8;
   }
 
   async setHRByDevice(id: string, power: string, setTemp: string, mode: string, speed: string) {
@@ -99,11 +101,11 @@ export class BrokerService {
   async getHR(id: number) {
     if (!this.database[id].data.hr.isConsumpted) {
 
-      if (this.counter <= 0) {
-        this.counter = 5;
+      if (this.database[id].data.hr.counter <= 0) {
+        this.database[id].data.hr.counter = 8;
         this.database[id].data.hr.isConsumpted = true
       } else {
-        this.counter -= 1;
+        this.database[id].data.hr.counter -= 1;
       }
 
       return [1, ...this.database[id].data.hr.browser]
