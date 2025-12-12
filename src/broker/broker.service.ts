@@ -35,6 +35,8 @@ export class BrokerService {
     },
   ];
 
+  counter = 5
+
   async getDisplayData() {
     return this.database;
   }
@@ -84,16 +86,26 @@ export class BrokerService {
       this.database[id].data.hr.device[3] = parseInt(speed);
     }
 
+    console.log(this.database[id].data.hr.isConsumpted);
+
     if (this.database[id].data.hr.isConsumpted) {
       this.database[id].data.hr.server = [...this.database[id].data.hr.device]
       this.database[id].data.hr.browser = [...this.database[id].data.hr.device]
     }
 
+
   }
 
   async getHR(id: number) {
     if (!this.database[id].data.hr.isConsumpted) {
-      this.database[id].data.hr.isConsumpted = true
+
+      if (this.counter <= 0) {
+        this.counter = 5;
+        this.database[id].data.hr.isConsumpted = true
+      } else {
+        this.counter -= 1;
+      }
+
       return [1, ...this.database[id].data.hr.browser]
     }
 
