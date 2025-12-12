@@ -71,13 +71,17 @@ export class BrokerService {
     this.database[id].data.hr.counter = 8;
   }
 
-  async setHRByDevice(id: string, power: string, setTemp: string, mode: string, speed: string) {
+  async setHRByDevice(id: string, power: string, roomTemp: string, setTemp: string, mode: string, speed: string) {
     if (power) {
       this.database[id].data.hr.device[0] = parseInt(power)
     }
 
     if (setTemp) {
       this.database[id].data.hr.device[1] = parseInt(setTemp);
+    }
+
+    if (roomTemp) {
+      this.database[id].data.ir.device[0] = parseInt(roomTemp);
     }
 
     if (mode) {
@@ -94,8 +98,6 @@ export class BrokerService {
       this.database[id].data.hr.server = [...this.database[id].data.hr.device]
       this.database[id].data.hr.browser = [...this.database[id].data.hr.device]
     }
-
-
   }
 
   async getHR(id: number) {

@@ -27,11 +27,12 @@ export class BrokerController {
   async setHRByDevice(
     @Query('id') id: string,
     @Query('power') power: string,
+    @Query('roomTemp') roomTemp: string,
     @Query('setTemp') setTemp: string,
     @Query('mode') mode: string,
     @Query('speed') speed: string,
   ) {
-    await this.brokerService.setHRByDevice(id, power, setTemp, mode, speed);
+    await this.brokerService.setHRByDevice(id, power, roomTemp, setTemp, mode, speed);
   }
 
   @Get('get-hr/:id')
