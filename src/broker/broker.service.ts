@@ -35,6 +35,54 @@ export class BrokerService {
         },
       },
     },
+    {
+      id: 2,
+      name: 'IFCU-03',
+      data: {
+        ir: {
+          device: [2200, 0, 0, 0, 0],
+        },
+        hr: {
+          device: [0, 2500, 0, 0],
+          browser: [0, 2500, 0, 0],
+          server: [0, 2500, 0, 0],
+          isConsumpted: false,
+          counter: 8
+        },
+      },
+    },
+     {
+      id: 3,
+      name: 'IFCU-04',
+      data: {
+        ir: {
+          device: [2200, 0, 0, 0, 0],
+        },
+        hr: {
+          device: [0, 2500, 0, 0],
+          browser: [0, 2500, 0, 0],
+          server: [0, 2500, 0, 0],
+          isConsumpted: false,
+          counter: 8
+        },
+      },
+    },
+     {
+      id: 4,
+      name: 'IFCU-05',
+      data: {
+        ir: {
+          device: [2200, 0, 0, 0, 0],
+        },
+        hr: {
+          device: [0, 2500, 0, 0],
+          browser: [0, 2500, 0, 0],
+          server: [0, 2500, 0, 0],
+          isConsumpted: false,
+          counter: 8
+        },
+      },
+    },
   ];
 
 
