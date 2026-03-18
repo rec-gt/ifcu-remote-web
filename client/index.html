@@ -147,22 +147,27 @@
         }
 
         if (target) {
+          console.log(parseInt(localData[idx][5]));
           if (cmd === 'A') {
-            target = localData[idx][2] = '1';
+            localData[idx][2] = '1';
           } else if (cmd === 'B') {
-            target = localData[idx][2] = '0';
+            localData[idx][2] = '0';
           } else if (cmd === 'C') {
-            target = localData[idx][3] = '0';
+            localData[idx][3] = '0';
           } else if (cmd === 'D') {
-            target = localData[idx][3] = '1';
+            localData[idx][3] = '1';
           } else if (cmd === 'E') {
-            target = localData[idx][3] = '2';
+            localData[idx][3] = '2';
           } else if (cmd === 'F') {
-            target = localData[idx][4] = '0';
+            localData[idx][4] = '0';
           } else if (cmd === 'G') {
-            target = localData[idx][4] = '1';
+            localData[idx][4] = '1';
           } else if (cmd === 'H') {
-            target = localData[idx][4] = '2';
+            localData[idx][4] = '2';
+          } else if (cmd === 'I') {
+            localData[idx][5] = (parseInt(localData[idx][5]) + 50).toString();
+          } else if (cmd === 'J') {
+            localData[idx][5] = (parseInt(localData[idx][5]) - 50).toString();
           }
         }
       }
