@@ -144,120 +144,112 @@
         }
       }
     </style>
-  </head>
 
-  <body>
-    <div style="padding: 1rem">
-      <h1>iFCU Many-to-many Control Panel</h1>
-      <div id="parent"></div>
-    </div>
-  </body>
+    <script>
+      const DOMAIN = 'http://10.236.209.200';
 
-  <script>
-    const DOMAIN = 'http://10.236.209.200';
+      let localData = [];
+      let remoteData = [];
 
-    let localData = [];
-    let remoteData = [];
+      async function setCmd(id, cmd) {
+        await fetch(`${DOMAIN}/browser/set?id=${id}&cmd=${cmd}`);
 
-    async function setCmd(id, cmd) {
-      await fetch(`${DOMAIN}/browser/set?id=${id}&cmd=${cmd}`);
+        // update locally
+        const idx = localData.findIndex((e) => e[0] === id);
+        let target = null;
+        if (idx > -1) {
+          target = localData[idx];
+        }
 
-      // update locally
-      const idx = localData.findIndex((e) => e[0] === id);
-      let target = null;
-      if (idx > -1) {
-        target = localData[idx];
-      }
-
-      if (target) {
-        console.log(cmd);
-        if (cmd === 'A') {
-          localData[idx][2] = '1';
-        } else if (cmd === 'B') {
-          localData[idx][2] = '0';
-        } else if (cmd === 'C') {
-          localData[idx][3] = '0';
-        } else if (cmd === 'D') {
-          localData[idx][3] = '1';
-        } else if (cmd === 'E') {
-          localData[idx][3] = '2';
-        } else if (cmd === 'F') {
-          localData[idx][4] = '0';
-        } else if (cmd === 'G') {
-          localData[idx][4] = '1';
-        } else if (cmd === 'H') {
-          localData[idx][4] = '2';
-        } else if (cmd === 'I') {
-          localData[idx][5] = (parseInt(localData[idx][5]) + 50).toString();
-        } else if (cmd === 'J') {
-          localData[idx][5] = (parseInt(localData[idx][5]) - 50).toString();
+        if (target) {
+          console.log(cmd);
+          if (cmd === 'A') {
+            localData[idx][2] = '1';
+          } else if (cmd === 'B') {
+            localData[idx][2] = '0';
+          } else if (cmd === 'C') {
+            localData[idx][3] = '0';
+          } else if (cmd === 'D') {
+            localData[idx][3] = '1';
+          } else if (cmd === 'E') {
+            localData[idx][3] = '2';
+          } else if (cmd === 'F') {
+            localData[idx][4] = '0';
+          } else if (cmd === 'G') {
+            localData[idx][4] = '1';
+          } else if (cmd === 'H') {
+            localData[idx][4] = '2';
+          } else if (cmd === 'I') {
+            localData[idx][5] = (parseInt(localData[idx][5]) + 50).toString();
+          } else if (cmd === 'J') {
+            localData[idx][5] = (parseInt(localData[idx][5]) - 50).toString();
+          }
         }
       }
-    }
 
-    let isStopQuery = false;
-    setInterval(() => {
-      fetchAll();
-    }, 1000);
-  </script>
+      let isStopQuery = false;
+      setInterval(() => {
+        fetchAll();
+      }, 1000);
+    </script>
 
-  <script>
-    async function fetchAll() {
-      try {
-        const data = await fetch(`${DOMAIN}/browser/get`);
-        const jsonData = await data.json();
-        syncData(jsonData);
-        renderData(jsonData);
+    <script>
+      async function fetchAll() {
+        try {
+          const data = await fetch(`${DOMAIN}/browser/get`);
+          const jsonData = await data.json();
+          syncData(jsonData);
+          renderData(jsonData);
 
-        // if (!isStopQuery) {
-        //   renderPage();
-        // }
-      } catch (error) {
-        console.error('Error in cmd:', error);
-      }
-    }
-
-    function syncData(data) {
-      for (let i = 0; i < data.length; i++) {
-        const [
-          id,
-          cmd,
-          onOff,
-          mode,
-          speed,
-          setTemp,
-          roomTemp,
-          isConn,
-          loading,
-        ] = data[i];
-        if (loading === '0') {
-          console.log('finish compromise');
-          localData[i] = data[i];
-          document.getElementById(`${id}-sync`).style.display = 'none';
-        } else {
-          document.getElementById(`${id}-sync`).style.display = 'block';
+          // if (!isStopQuery) {
+          //   renderPage();
+          // }
+        } catch (error) {
+          console.error('Error in cmd:', error);
         }
       }
-    }
 
-    function renderPage() {
-      const parent = document.getElementById('parent');
-      parent.innerHTML = '';
+      function syncData(data) {
+        for (let i = 0; i < data.length; i++) {
+          const [
+            id,
+            cmd,
+            onOff,
+            mode,
+            speed,
+            setTemp,
+            roomTemp,
+            isConn,
+            loading,
+          ] = data[i];
+          if (loading === '0') {
+            console.log('finish compromise');
+            localData[i] = data[i];
+            document.getElementById(`${id}-sync`).style.display = 'none';
+          } else {
+            document.getElementById(`${id}-sync`).style.display = 'block';
+          }
+        }
+      }
 
-      for (let i = 0; i < localData.length; i++) {
-        const [
-          id,
-          cmd,
-          onOff,
-          mode,
-          speed,
-          setTemp,
-          roomTemp,
-          isConn,
-          loading,
-        ] = localData[i];
+      function renderPage() {
+        const parent = document.getElementById('parent');
+        parent.innerHTML = '';
 
-        const header = `
+        for (let i = 0; i < localData.length; i++) {
+          const [
+            id,
+            cmd,
+            onOff,
+            mode,
+            speed,
+            setTemp,
+            roomTemp,
+            isConn,
+            loading,
+          ] = localData[i];
+
+          const header = `
               <div class="flex bar">
                 <div>${id}</div>
                 <div class="flex" style="gap: 1rem">
@@ -267,7 +259,7 @@
               </div>
             `;
 
-        parent.innerHTML += `
+          parent.innerHTML += `
             <div class="panel">
               ${header}
               <div>
@@ -320,17 +312,17 @@
               </div>
             </div>
       `;
+        }
       }
-    }
-  </script>
+    </script>
 
-  <script>
-    function preRender() {
-      const parent = document.getElementById('parent');
-      parent.innerHTML = '';
+    <script>
+      function preRender() {
+        const parent = document.getElementById('parent');
+        parent.innerHTML = '';
 
-      for (const id of ['ifcu-001', 'ifcu-002', 'ifcu-003']) {
-        const header = `
+        for (const id of ['ifcu-001', 'ifcu-002', 'ifcu-003']) {
+          const header = `
               <div class="flex bar">
                 <div>${id}</div>
                 <div class="flex" style="gap: 1rem">
@@ -341,7 +333,7 @@
               </div>
             `;
 
-        const body = `
+          const body = `
             <div class="panel">
               ${header}
               <div>
@@ -395,45 +387,55 @@
             </div>
             `;
 
-        parent.innerHTML += body;
-      }
-    }
-
-    function renderData() {
-      for (const data of localData) {
-        const id = data[0];
-        const onOff = data[2];
-        const mode = data[3];
-        const speed = data[4];
-        const setTemp = data[5];
-        const roomTemp = data[6];
-        const sync = data[8];
-
-        if (onOff === '1') {
-          document.getElementById(`${id}-on`).classList.add('on-off-active');
-          document
-            .getElementById(`${id}-off`)
-            .classList.remove('on-off-active');
+          parent.innerHTML += body;
         }
-
-        if (onOff === '0') {
-          document.getElementById(`${id}-on`).classList.remove('on-off-active');
-          document.getElementById(`${id}-off`).classList.add('on-off-active');
-        }
-
-        document.getElementById(`${id}-roomTemp`).innerHTML = (
-          parseInt(roomTemp) / 100
-        ).toFixed(1);
-
-        document.getElementById(`${id}-setTemp`).innerHTML = (
-          parseInt(setTemp) / 100
-        ).toFixed(1);
-
-        document.getElementById(`${id}-mode`).value = ['C', 'D', 'E'][mode];
-        document.getElementById(`${id}-speed`).value = ['F', 'G', 'H'][speed];
       }
-    }
-  </script>
+
+      function renderData() {
+        for (const data of localData) {
+          const id = data[0];
+          const onOff = data[2];
+          const mode = data[3];
+          const speed = data[4];
+          const setTemp = data[5];
+          const roomTemp = data[6];
+          const sync = data[8];
+
+          if (onOff === '1') {
+            document.getElementById(`${id}-on`).classList.add('on-off-active');
+            document
+              .getElementById(`${id}-off`)
+              .classList.remove('on-off-active');
+          }
+
+          if (onOff === '0') {
+            document
+              .getElementById(`${id}-on`)
+              .classList.remove('on-off-active');
+            document.getElementById(`${id}-off`).classList.add('on-off-active');
+          }
+
+          document.getElementById(`${id}-roomTemp`).innerHTML = (
+            parseInt(roomTemp) / 100
+          ).toFixed(1);
+
+          document.getElementById(`${id}-setTemp`).innerHTML = (
+            parseInt(setTemp) / 100
+          ).toFixed(1);
+
+          document.getElementById(`${id}-mode`).value = ['C', 'D', 'E'][mode];
+          document.getElementById(`${id}-speed`).value = ['F', 'G', 'H'][speed];
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <div style="padding: 1rem">
+      <h1>iFCU Many-to-many Control Panel</h1>
+      <div id="parent"></div>
+    </div>
+  </body>
 
   <script>
     preRender();
