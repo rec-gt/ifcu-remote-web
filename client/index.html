@@ -132,7 +132,6 @@
 
     <script>
       const DOMAIN = 'http://10.236.209.200';
-      let finishInitFetch = false;
 
       let onOff = 0;
       let roomTemp = 0;
@@ -140,55 +139,8 @@
       let mode = 0;
       let fanSpeed = 0;
 
-      async function sendCMD(c) {
-        try {
-          const response = await fetch(`/cmd?c=${c}`);
-        } catch (error) {
-          console.error('Error in cmd:', error);
-        }
-      }
-
-      function rerenderData() {
-        document.getElementById('on-off').innerHTML = [
-          `<div class="on-off" onclick="setOnOff(1)">ON</div>
-              <div class="on-off-active" onclick="setOnOff(0)">OFF</div>`,
-          `<div class="on-off-active" onclick="setOnOff(1)">ON</div>
-              <div class="on-off" onclick="setOnOff(0)">OFF</div>`,
-        ][onOff];
-        document.getElementById('room-temp').textContent = (
-          roomTemp / 100
-        ).toFixed(2);
-        document.getElementById('set-point').textContent = (spt / 100).toFixed(
-          2,
-        );
-        document.getElementById('mode').value = mode;
-        document.getElementById('fan-speed').value = fanSpeed;
-      }
-
       async function setCmd(id, cmd) {
         await fetch(`${DOMAIN}/browser/set?id=${id}&cmd=${cmd}`);
-      }
-
-      async function setOnOff(id, power) {
-        await fetch(`/broker/set-hr-browser?id=${id}&power=${power}`);
-      }
-
-      async function setSetPointTemperature(id, action) {
-        if (action == 1) {
-          await fetch(`/broker/set-hr-browser?id=${id}&setTempIncrease=1`);
-        } else {
-          await fetch(`/broker/set-hr-browser?id=${id}&setTempDecrease=1`);
-        }
-      }
-
-      async function setMode(id, elem) {
-        await fetch(`/broker/set-hr-browser?id=${id}&mode=${elem.value}`);
-        isStopQuery = false;
-      }
-
-      async function setFanSpeed(id, elem) {
-        await fetch(`/broker/set-hr-browser?id=${id}&speed=${elem.value}`);
-        isStopQuery = false;
       }
 
       let isStopQuery = false;
@@ -209,6 +161,10 @@
         } catch (error) {
           console.error('Error in cmd:', error);
         }
+      }
+
+      async function asyncData(fullsetData) {
+
       }
 
       function renderAllData(fullsetData) {
