@@ -133,11 +133,8 @@
     <script>
       const DOMAIN = 'http://10.236.209.200';
 
-      let onOff = 0;
-      let roomTemp = 0;
-      let spt = 0;
-      let mode = 0;
-      let fanSpeed = 0;
+      let localData = [];
+      let remoteData = [];
 
       async function setCmd(id, cmd) {
         await fetch(`${DOMAIN}/browser/set?id=${id}&cmd=${cmd}`);
@@ -145,33 +142,26 @@
 
       let isStopQuery = false;
       setInterval(() => {
-        if (!isStopQuery) {
-          fetchAll();
-        }
+        fetchAll();
       }, 1000);
     </script>
 
     <script>
       async function fetchAll() {
         try {
-          const fullsetData = await fetch(`${DOMAIN}/browser/get`, {
-            method: 'get',
-          });
-          renderAllData(await fullsetData.json());
+          const data = await fetch(`${DOMAIN}/browser/get`);
+          syncData(await data.json());
+
+          if (!isStopQuery) {
+            renderPage();
+          }
         } catch (error) {
           console.error('Error in cmd:', error);
         }
       }
 
-      async function asyncData(fullsetData) {
-
-      }
-
-      function renderAllData(fullsetData) {
-        const parent = document.getElementById('parent');
-        parent.innerHTML = '';
-
-        for (let i = 0; i < fullsetData.length; i++) {
+      function syncData(data) {
+        for (let i = 0; i < data.length; i++) {
           const [
             id,
             cmd,
@@ -182,8 +172,20 @@
             roomTemp,
             isConn,
             loading,
-          ] = fullsetData[i];
-          console.log(
+          ] = data[i];
+          if (loading === '0') {
+            console.log('finish compromise');
+            localData[i] = data[i];
+          }
+        }
+      }
+
+      function renderPage() {
+        const parent = document.getElementById('parent');
+        parent.innerHTML = '';
+
+        for (let i = 0; i < localData.length; i++) {
+          const [
             id,
             cmd,
             onOff,
@@ -193,7 +195,7 @@
             roomTemp,
             isConn,
             loading,
-          );
+          ] = localData[i];
 
           const header = `
               <div class="flex bar">
