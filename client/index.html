@@ -225,9 +225,13 @@
           if (loading === '0') {
             console.log('finish compromise');
             localData[i] = data[i];
-            document.getElementById(`${id}-sync`).style.display = 'none';
+            if (document.getElementById(`${id}-sync`)) {
+              document.getElementById(`${id}-sync`).style.display = 'none';
+            }
           } else {
-            document.getElementById(`${id}-sync`).style.display = 'block';
+            if (document.getElementById(`${id}-sync`)) {
+              document.getElementById(`${id}-sync`).style.display = 'block';
+            }
           }
         }
       }
