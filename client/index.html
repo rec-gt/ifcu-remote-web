@@ -187,7 +187,6 @@
         }
       }
 
-      let isStopQuery = false;
       setInterval(() => {
         fetchAll();
       }, 1000);
@@ -200,10 +199,6 @@
           const jsonData = await data.json();
           syncData(jsonData);
           renderData(jsonData);
-
-          // if (!isStopQuery) {
-          //   renderPage();
-          // }
         } catch (error) {
           console.error('Error in cmd:', error);
         }
@@ -233,89 +228,6 @@
               document.getElementById(`${id}-sync`).style.display = 'block';
             }
           }
-        }
-      }
-
-      function renderPage() {
-        const parent = document.getElementById('parent');
-        parent.innerHTML = '';
-
-        for (let i = 0; i < localData.length; i++) {
-          const [
-            id,
-            cmd,
-            onOff,
-            mode,
-            speed,
-            setTemp,
-            roomTemp,
-            isConn,
-            loading,
-          ] = localData[i];
-
-          const header = `
-              <div class="flex bar">
-                <div>${id}</div>
-                <div class="flex" style="gap: 1rem">
-                    <div class="${onOff == 1 ? 'on-off-active' : 'on-off'}" onclick="setCmd('${id}','A')">ON</div>
-                    <div class="${onOff == 0 ? 'on-off-active' : 'on-off'}" onclick="setCmd('${id}','B')">OFF</div>
-                </div>
-              </div>
-            `;
-
-          parent.innerHTML += `
-            <div class="panel">
-              ${header}
-              <div>
-                <div class="flex">
-                  <div class="center">Room Temp.</div>
-                  <div class="center">Set Point</div>
-                </div>
-                <div class="flex">
-                  <div class="center">
-                    <div class="center room-temp">
-                      <div>${(roomTemp / 100).toFixed(1)}</div>
-                      <div>°C</div>
-                    </div>
-                  </div>
-                  <div class="center" style="justify-content: space-between">
-                    <div class="switch" onclick="setCmd('${id}','J')"><i class="arrow arrow-left"></i></div>
-                    <div id="set-point">${(setTemp / 100).toFixed(1)}</div>
-                    <div>°C</div>
-                    <div class="switch" onclick="setCmd('${id}','I')"><i class="arrow arrow-right"></i></div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex">
-                  <div class="center">Mode</div>
-                  <div class="center">Fan Speed</div>
-                </div>
-                <div class="flex">
-                  <div class="center">
-                    <div class="center" style="height: 50px">
-                      <select class="mode" onfocus="isStopQuery=true" onfocusout="isStopQuery=false" onchange="setCmd('${id}',this.value)">
-                        <option value="C" ${mode == 0 ? 'selected' : ''}>Auto</option>
-                        <option value="D" ${mode == 1 ? 'selected' : ''}>Manual</option>
-                        <option value="E" ${mode == 2 ? 'selected' : ''}>Fan</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="center">
-                    <div class="center" style="height: 50px">
-                      <select class="fan-speed" onfocus="isStopQuery=true" onfocusout="isStopQuery=false" onchange="setCmd('${id}',this.value)">
-                        <option value="F" ${speed == 0 ? 'selected' : ''}>Low</option>
-                        <option value="G" ${speed == 1 ? 'selected' : ''}>Medium</option>
-                        <option value="H" ${speed == 2 ? 'selected' : ''}>High</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-      `;
         }
       }
     </script>
@@ -436,7 +348,7 @@
 
   <body>
     <div style="padding: 1rem">
-      <h1>iFCU Many-to-many Control Panel</h1>
+      <h1>iFCU Remote Control Panel</h1>
       <div id="parent"></div>
     </div>
   </body>
