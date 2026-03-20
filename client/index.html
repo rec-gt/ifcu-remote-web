@@ -180,9 +180,9 @@
           } else if (cmd === 'H') {
             localData[idx][5] = '2';
           } else if (cmd === 'I') {
-            localData[idx][6] = (parseInt(localData[idx][5]) + 50).toString();
+            localData[idx][6] = (parseInt(localData[idx][6]) + 50).toString();
           } else if (cmd === 'J') {
-            localData[idx][6] = (parseInt(localData[idx][5]) - 50).toString();
+            localData[idx][6] = (parseInt(localData[idx][6]) - 50).toString();
           }
         }
       }
@@ -199,6 +199,7 @@
           const jsonData = await data.json();
           syncData(jsonData);
           renderData(jsonData);
+          console.log(jsonData[0]);
         } catch (error) {
           console.error('Error in cmd:', error);
         }
@@ -219,15 +220,29 @@
             isConnected,
             isBrowserSynced,
           ] = data[i];
-          if (isBrowserSynced === '1') {
-            console.log('finish compromise');
-            localData[i] = data[i];
-            if (document.getElementById(`${id}-sync`)) {
-              document.getElementById(`${id}-sync`).style.display = 'none';
+          if (isBrowserSynced === '2') {
+            if (isDeviceSynced === '1') {
+              console.log('finish compromise');
+              localData[i] = data[i];
+              if (document.getElementById(`${id}-sync`)) {
+                document.getElementById(`${id}-sync`).style.display = 'none';
+              }
+            } else {
+              if (document.getElementById(`${id}-sync`)) {
+                document.getElementById(`${id}-sync`).style.display = 'block';
+              }
             }
           } else {
-            if (document.getElementById(`${id}-sync`)) {
-              document.getElementById(`${id}-sync`).style.display = 'block';
+            if (isBrowserSynced === '1') {
+              console.log('finish compromise');
+              localData[i] = data[i];
+              if (document.getElementById(`${id}-sync`)) {
+                document.getElementById(`${id}-sync`).style.display = 'none';
+              }
+            } else {
+              if (document.getElementById(`${id}-sync`)) {
+                document.getElementById(`${id}-sync`).style.display = 'block';
+              }
             }
           }
         }
