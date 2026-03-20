@@ -159,14 +159,23 @@
           isSynced: '',
         },
       ];
+      
+      const database_clone = [
+        {
+          id: 'ifcu-001',
+          name: 'IFCU-001',
+          ip: '10.236.208.71',
+          onOff: '',
+          mode: '',
+          speed: '',
+          setTemp: '',
+          roomTemp: '',
+          isSynced: '',
+        },
+      ];
     </script>
 
     <script>
-      const DOMAIN = 'http://10.236.209.71';
-
-      let localData = [];
-      let remoteData = [];
-
       async function setCmd(id, cmd) {
         const idx = database.findIndex((e) => e.id === id);
         if (idx > -1) {
@@ -187,8 +196,9 @@
             const { id, ip } = device;
             const data = await fetch(`http://${ip}/get`);
             const jsonData = await data.json();
-            const { onOff, mode, speed, setTemp, roomTemp } = jsonData;
-            renderData(id, onOff, mode, speed, setTemp, roomTemp);
+            const { onOff, mode, speed, setTemp, roomTemp, isSynced } =
+              jsonData;
+            renderData(id, onOff, mode, speed, setTemp, roomTemp, isSynced);
           }
         } catch (error) {
           console.error('Error in cmd:', error);
@@ -272,7 +282,7 @@
         }
       }
 
-      function renderData(id, onOff, mode, speed, setTemp, roomTemp) {
+      function renderData(id, onOff, mode, speed, setTemp, roomTemp, isSynced) {
         if (onOff === '1') {
           document.getElementById(`${id}-on`).classList.add('on-off-active');
           document
@@ -295,6 +305,16 @@
 
         document.getElementById(`${id}-mode`).value = ['C', 'D', 'E'][mode];
         document.getElementById(`${id}-speed`).value = ['F', 'G', 'H'][speed];
+
+        if (isSynced === '1') {
+          if (document.getElementById(`${id}-sync`)) {
+            document.getElementById(`${id}-sync`).style.display = 'none';
+          }
+        } else {
+          if (document.getElementById(`${id}-sync`)) {
+            document.getElementById(`${id}-sync`).style.display = 'block';
+          }
+        }
       }
     </script>
   </head>
