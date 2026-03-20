@@ -146,44 +146,32 @@
     </style>
 
     <script>
-      const DOMAIN = 'http://10.236.209.246';
+      const database = [
+        {
+          id: 'ifcu-001',
+          name: 'IFCU-001',
+          ip: '10.236.208.71',
+          onOff: '',
+          mode: '',
+          speed: '',
+          setTemp: '',
+          roomTemp: '',
+          isSynced: '',
+        },
+      ];
+    </script>
+
+    <script>
+      const DOMAIN = 'http://10.236.209.71';
 
       let localData = [];
       let remoteData = [];
 
       async function setCmd(id, cmd) {
-        await fetch(`${DOMAIN}/browser/set?id=${id}&cmd=${cmd}`);
-
-        // update locally
-        const idx = localData.findIndex((e) => e[0] === id);
-        let target = null;
+        const idx = database.findIndex((e) => e.id === id);
         if (idx > -1) {
-          target = localData[idx];
-        }
-
-        if (target) {
-          console.log(cmd);
-          if (cmd === 'A') {
-            localData[idx][3] = '1';
-          } else if (cmd === 'B') {
-            localData[idx][3] = '0';
-          } else if (cmd === 'C') {
-            localData[idx][4] = '0';
-          } else if (cmd === 'D') {
-            localData[idx][4] = '1';
-          } else if (cmd === 'E') {
-            localData[idx][4] = '2';
-          } else if (cmd === 'F') {
-            localData[idx][5] = '0';
-          } else if (cmd === 'G') {
-            localData[idx][5] = '1';
-          } else if (cmd === 'H') {
-            localData[idx][5] = '2';
-          } else if (cmd === 'I') {
-            localData[idx][6] = (parseInt(localData[idx][6]) + 50).toString();
-          } else if (cmd === 'J') {
-            localData[idx][6] = (parseInt(localData[idx][6]) - 50).toString();
-          }
+          const { ip } = database[idx];
+          await fetch(`http://${ip}/set?cmd=${cmd}`);
         }
       }
 
@@ -195,41 +183,15 @@
     <script>
       async function fetchAll() {
         try {
-          const data = await fetch(`${DOMAIN}/browser/get`);
-          const jsonData = await data.json();
-          syncData(jsonData);
-          renderData(jsonData);
-          console.log(jsonData[0]);
+          for (const device of database) {
+            const { id, ip } = device;
+            const data = await fetch(`http://${ip}/get`);
+            const jsonData = await data.json();
+            const { onOff, mode, speed, setTemp, roomTemp } = jsonData;
+            renderData(id, onOff, mode, speed, setTemp, roomTemp);
+          }
         } catch (error) {
           console.error('Error in cmd:', error);
-        }
-      }
-
-      function syncData(data) {
-        for (let i = 0; i < data.length; i++) {
-          const [
-            id,
-            name,
-            cmd,
-            onOff,
-            mode,
-            speed,
-            setTemp,
-            roomTemp,
-            isDeviceSynced,
-            isConnected,
-          ] = data[i];
-
-          if (isDeviceSynced === '1') {
-            localData[i] = data[i];
-            if (document.getElementById(`${id}-sync`)) {
-              document.getElementById(`${id}-sync`).style.display = 'none';
-            }
-          } else {
-            if (document.getElementById(`${id}-sync`)) {
-              document.getElementById(`${id}-sync`).style.display = 'block';
-            }
-          }
         }
       }
     </script>
@@ -239,10 +201,11 @@
         const parent = document.getElementById('parent');
         parent.innerHTML = '';
 
-        for (const id of ['ifcu-001', 'ifcu-002', 'ifcu-003']) {
+        for (const data of database) {
+          const { id, name } = data;
           const header = `
               <div class="flex bar">
-                <div>${id}</div>
+                <div>${name}</div>
                 <div class="flex" style="gap: 1rem">
                     <svg id="${id}-sync" class="rotate-svg" width="20px" height="20px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#00FF00"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.006 8.267L.78 9.5 0 8.73l2.09-2.07.76.01 2.09 2.12-.76.76-1.167-1.18a5 5 0 0 0 9.4 1.983l.813.597a6 6 0 0 1-11.22-2.683zm10.99-.466L11.76 6.55l-.76.76 2.09 2.11.76.01 2.09-2.07-.75-.76-1.194 1.18a6 6 0 0 0-11.11-2.92l.81.594a5 5 0 0 1 9.3 2.346z"/></svg>
                     <div id="${id}-on" class="on-off" onclick="setCmd('${id}','A')">ON</div>
@@ -309,43 +272,29 @@
         }
       }
 
-      function renderData() {
-        for (const data of localData) {
-          const id = data[0];
-          const name = data[1];
-          const onOff = data[3];
-          const mode = data[4];
-          const speed = data[5];
-          const setTemp = data[6];
-          const roomTemp = data[7];
-          const isDeviceSynced = data[8];
-          const isConnected = data[9];
-
-          if (onOff === '1') {
-            document.getElementById(`${id}-on`).classList.add('on-off-active');
-            document
-              .getElementById(`${id}-off`)
-              .classList.remove('on-off-active');
-          }
-
-          if (onOff === '0') {
-            document
-              .getElementById(`${id}-on`)
-              .classList.remove('on-off-active');
-            document.getElementById(`${id}-off`).classList.add('on-off-active');
-          }
-
-          document.getElementById(`${id}-roomTemp`).innerHTML = (
-            parseInt(roomTemp) / 100
-          ).toFixed(1);
-
-          document.getElementById(`${id}-setTemp`).innerHTML = (
-            parseInt(setTemp) / 100
-          ).toFixed(1);
-
-          document.getElementById(`${id}-mode`).value = ['C', 'D', 'E'][mode];
-          document.getElementById(`${id}-speed`).value = ['F', 'G', 'H'][speed];
+      function renderData(id, onOff, mode, speed, setTemp, roomTemp) {
+        if (onOff === '1') {
+          document.getElementById(`${id}-on`).classList.add('on-off-active');
+          document
+            .getElementById(`${id}-off`)
+            .classList.remove('on-off-active');
         }
+
+        if (onOff === '0') {
+          document.getElementById(`${id}-on`).classList.remove('on-off-active');
+          document.getElementById(`${id}-off`).classList.add('on-off-active');
+        }
+
+        document.getElementById(`${id}-roomTemp`).innerHTML = (
+          parseInt(roomTemp) / 100
+        ).toFixed(1);
+
+        document.getElementById(`${id}-setTemp`).innerHTML = (
+          parseInt(setTemp) / 100
+        ).toFixed(1);
+
+        document.getElementById(`${id}-mode`).value = ['C', 'D', 'E'][mode];
+        document.getElementById(`${id}-speed`).value = ['F', 'G', 'H'][speed];
       }
     </script>
   </head>
