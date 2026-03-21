@@ -150,6 +150,8 @@
     </style>
 
     <script>
+      let renderLock = false;
+
       const database = [
         {
           id: 'ifcu-001',
@@ -184,6 +186,8 @@
       async function setCmd(id, cmd) {
         const idx = database.findIndex((e) => e.id === id);
         if (idx > -1) {
+          renderLock = true;
+
           const device = database[idx];
           const { id, ip } = device;
           fetch(`http://${ip}/set?cmd=${cmd}`);
@@ -211,17 +215,25 @@
               device.setTemp = (parseInt(device.setTemp) - 50).toString();
             }
           }
+
+          Object.assign(device, { isSynced: '0' });
           renderData(id);
+
+          renderLock = false;
         }
       }
 
       setInterval(() => {
         fetchAll();
-      }, 1000);
+      }, 3000);
     </script>
 
     <script>
       async function fetchAll() {
+        if (renderLock) {
+          return;
+        }
+        
         try {
           for (const device of database) {
             const { id, ip } = device;
