@@ -237,19 +237,14 @@
                   isConnected: true,
                 });
 
-                // if (!(data.isSynced === '0' || data.queueLen !== '0')) {
-                //   Object.assign(device, {
-                //     isSynced: data.isSynced,
-                //     queueLen: data.queueLen,
-                //     isConnected,
-                //   });
-                // } else {
-                //   Object.assign(device, { ...data, isConnected });
-                // }
-
-                // if (data.modbusComm !== '1') {
-                //   device.isConnected = false;
-                // }
+                if (data.isSynced === '1' && data.queueLen === '0') {
+                  Object.assign(device, { ...data });
+                } else {
+                  Object.assign(device, {
+                    isSynced: data.isSynced,
+                    queueLen: data.queueLen,
+                  });
+                }
               })
               .catch((err) => {
                 Object.assign(device, {
