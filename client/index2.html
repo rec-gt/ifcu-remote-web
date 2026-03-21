@@ -143,6 +143,10 @@
           transform: rotate(360deg);
         }
       }
+
+      .sync-fail {
+        fill: red;
+      }
     </style>
 
     <script>
@@ -195,7 +199,9 @@
         try {
           for (const device of database) {
             const { id, ip } = device;
-            await fetch(`http://${ip}/get`)
+            await fetch(`http://${ip}/get`, {
+              signal: AbortSignal.timeout(3000),
+            })
               .then((res) => {
                 return res.json();
               })
@@ -263,6 +269,7 @@
                   <div class="center">
                     <div class="center" style="height: 50px">
                       <select id="${id}-mode" class="mode" onchange="setCmd('${id}',this.value)">
+                        <option value="-">-</option>
                         <option value="C">Auto</option>
                         <option value="D">Manual</option>
                         <option value="E">Fan</option>
@@ -273,6 +280,7 @@
                   <div class="center">
                     <div class="center" style="height: 50px">
                       <select id="${id}-speed" class="fan-speed" onchange="setCmd('${id}',this.value)">
+                        <option value="-">-</option>
                         <option value="F">Low</option>
                         <option value="G">Medium</option>
                         <option value="H">High</option>
@@ -298,40 +306,57 @@
         isSynced,
         isConnected,
       }) {
-        if (onOff === '1') {
-          document.getElementById(`${id}-on`).classList.add('on-off-active');
-          document
-            .getElementById(`${id}-off`)
-            .classList.remove('on-off-active');
-        }
+        if (isConnected) {
+          if (onOff === '1') {
+            document.getElementById(`${id}-on`).classList.add('on-off-active');
+            document
+              .getElementById(`${id}-off`)
+              .classList.remove('on-off-active');
+          }
 
-        if (onOff === '0') {
-          document.getElementById(`${id}-on`).classList.remove('on-off-active');
-          document.getElementById(`${id}-off`).classList.add('on-off-active');
-        }
+          if (onOff === '0') {
+            document
+              .getElementById(`${id}-on`)
+              .classList.remove('on-off-active');
+            document.getElementById(`${id}-off`).classList.add('on-off-active');
+          }
 
-        document.getElementById(`${id}-roomTemp`).innerHTML = (
-          parseInt(roomTemp) / 100
-        ).toFixed(1);
+          document.getElementById(`${id}-roomTemp`).innerHTML = (
+            parseInt(roomTemp) / 100
+          ).toFixed(1);
 
-        document.getElementById(`${id}-setTemp`).innerHTML = (
-          parseInt(setTemp) / 100
-        ).toFixed(1);
+          document.getElementById(`${id}-setTemp`).innerHTML = (
+            parseInt(setTemp) / 100
+          ).toFixed(1);
 
-        document.getElementById(`${id}-mode`).value = ['C', 'D', 'E'][mode];
-        document.getElementById(`${id}-speed`).value = ['F', 'G', 'H'][speed];
+          document.getElementById(`${id}-mode`).value = ['C', 'D', 'E'][mode];
+          document.getElementById(`${id}-speed`).value = ['F', 'G', 'H'][speed];
 
-        if (isSynced === '1') {
           if (document.getElementById(`${id}-sync`)) {
-            document.getElementById(`${id}-sync`).style.display = 'none';
+            document.getElementById(`${id}-sync`).classList.remove('sync-fail');
+          }
+          if (isSynced === '1') {
+            if (document.getElementById(`${id}-sync`)) {
+              document.getElementById(`${id}-sync`).style.display = 'none';
+            }
+          } else {
+            if (document.getElementById(`${id}-sync`)) {
+              document.getElementById(`${id}-sync`).style.display = 'block';
+            }
           }
         } else {
           if (document.getElementById(`${id}-sync`)) {
+            document.getElementById(`${id}-sync`).classList.add('sync-fail');
             document.getElementById(`${id}-sync`).style.display = 'block';
           }
-        }
-
-        if (!isConnected) {
+          document.getElementById(`${id}-on`).classList.remove('on-off-active');
+          document
+            .getElementById(`${id}-off`)
+            .classList.remove('on-off-active');
+          document.getElementById(`${id}-roomTemp`).innerHTML = '--.-';
+          document.getElementById(`${id}-setTemp`).innerHTML = '--.-';
+          document.getElementById(`${id}-mode`).value = '-';
+          document.getElementById(`${id}-speed`).value = '-';
         }
       }
     </script>
