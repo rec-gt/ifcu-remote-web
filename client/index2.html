@@ -324,6 +324,7 @@
         roomTemp,
         isSynced,
         isConnected,
+        queueLen,
       }) {
         if (isConnected) {
           if (onOff === '1') {
@@ -354,13 +355,13 @@
           if (document.getElementById(`${id}-sync`)) {
             document.getElementById(`${id}-sync`).classList.remove('sync-fail');
           }
-          if (isSynced === '1' || queueLen !== '0') {
+          if (isSynced === '0' || queueLen !== '0') {
             if (document.getElementById(`${id}-sync`)) {
-              document.getElementById(`${id}-sync`).style.display = 'none';
+              document.getElementById(`${id}-sync`).style.display = 'block';
             }
           } else {
             if (document.getElementById(`${id}-sync`)) {
-              document.getElementById(`${id}-sync`).style.display = 'block';
+              document.getElementById(`${id}-sync`).style.display = 'none';
             }
           }
         } else {
