@@ -58,7 +58,7 @@
         width: 100%;
         max-width: 400px;
         border-radius: 10px;
-        border: 2px #444 solid;
+        border: 2px #666 solid;
         background-color: #fff;
         padding: 1rem;
       }
@@ -257,6 +257,10 @@
                     isSynced: data.isSynced,
                     queueLen: data.queueLen,
                   });
+                }
+
+                if (device.modbusComm !== '1') {
+                  Object.assign(device, { isConnected: false });
                 }
               })
               .catch((err) => {
