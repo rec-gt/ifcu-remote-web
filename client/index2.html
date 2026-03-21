@@ -185,8 +185,8 @@
         const idx = database.findIndex((e) => e.id === id);
         if (idx > -1) {
           const device = database[idx];
-          const { ip } = device;
-          await fetch(`http://${ip}/set?cmd=${cmd}`);
+          const { id, ip } = device;
+          fetch(`http://${ip}/set?cmd=${cmd}`);
 
           if (device) {
             if (cmd === 'A') {
@@ -211,6 +211,7 @@
               device.setTemp = (parseInt(device.setTemp) - 50).toString();
             }
           }
+          renderData(id);
         }
       }
 
@@ -423,7 +424,7 @@
 
   <body>
     <div style="padding: 1rem">
-      <h1>iFCU Remote Control Panel</h1>
+      <h1>RGT iFCU Remote Control Panel</h1>
       <div id="parent"></div>
     </div>
   </body>
