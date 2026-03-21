@@ -230,10 +230,6 @@
 
     <script>
       async function fetchAll() {
-        if (renderLock) {
-          return;
-        }
-        
         try {
           for (const device of database) {
             const { id, ip } = device;
@@ -246,6 +242,10 @@
                 return jsonData;
               })
               .then((data) => {
+                if (renderLock) {
+                  return;
+                }
+
                 Object.assign(device, {
                   isConnected: true,
                 });
