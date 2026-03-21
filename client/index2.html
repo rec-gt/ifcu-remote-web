@@ -189,7 +189,6 @@
           await fetch(`http://${ip}/set?cmd=${cmd}`);
 
           if (device) {
-            console.log(cmd);
             if (cmd === 'A') {
               device.onOff = '1';
             } else if (cmd === 'B') {
@@ -234,26 +233,31 @@
                 return jsonData;
               })
               .then((data) => {
-                const isConnected = true;
-                Object.assign(device, { ...data, isConnected });
-
-                if (data.modbusComm !== '1') {
-                  device.isConnected = false;
-                }
-
-                renderData({
-                  id,
-                  ...data,
-                  isConnected: device.isConnected,
+                Object.assign(device, {
+                  isConnected: true,
                 });
+
+                // if (!(data.isSynced === '0' || data.queueLen !== '0')) {
+                //   Object.assign(device, {
+                //     isSynced: data.isSynced,
+                //     queueLen: data.queueLen,
+                //     isConnected,
+                //   });
+                // } else {
+                //   Object.assign(device, { ...data, isConnected });
+                // }
+
+                // if (data.modbusComm !== '1') {
+                //   device.isConnected = false;
+                // }
               })
               .catch((err) => {
-                const isConnected = false;
-                Object.assign(device, { isConnected });
-                renderData({ id, isConnected: device.isConnected });
+                Object.assign(device, {
+                  isConnected: false,
+                });
               })
               .finally(() => {
-                console.table(device);
+                renderData(id);
               });
           }
         } catch (error) {
@@ -340,68 +344,83 @@
         }
       }
 
-      function renderData({
-        id,
-        onOff,
-        mode,
-        speed,
-        setTemp,
-        roomTemp,
-        isSynced,
-        isConnected,
-        queueLen,
-      }) {
-        if (isConnected) {
-          if (onOff === '1') {
-            document.getElementById(`${id}-on`).classList.add('on-off-active');
-            document
-              .getElementById(`${id}-off`)
-              .classList.remove('on-off-active');
-          }
+      function renderData(id) {
+        const idx = database.findIndex((e) => e.id === id);
 
-          if (onOff === '0') {
-            document
-              .getElementById(`${id}-on`)
-              .classList.remove('on-off-active');
-            document.getElementById(`${id}-off`).classList.add('on-off-active');
-          }
+        if (idx > -1) {
+          const {
+            onOff,
+            mode,
+            speed,
+            setTemp,
+            roomTemp,
+            isConnected,
+            isSynced,
+            queueLen,
+          } = database[idx];
 
-          document.getElementById(`${id}-roomTemp`).innerHTML = (
-            parseInt(roomTemp) / 100
-          ).toFixed(1);
+          if (isConnected) {
+            if (onOff === '1') {
+              document
+                .getElementById(`${id}-on`)
+                .classList.add('on-off-active');
+              document
+                .getElementById(`${id}-off`)
+                .classList.remove('on-off-active');
+            }
 
-          document.getElementById(`${id}-setTemp`).innerHTML = (
-            parseInt(setTemp) / 100
-          ).toFixed(1);
+            if (onOff === '0') {
+              document
+                .getElementById(`${id}-on`)
+                .classList.remove('on-off-active');
+              document
+                .getElementById(`${id}-off`)
+                .classList.add('on-off-active');
+            }
 
-          document.getElementById(`${id}-mode`).value = ['C', 'D', 'E'][mode];
-          document.getElementById(`${id}-speed`).value = ['F', 'G', 'H'][speed];
+            document.getElementById(`${id}-roomTemp`).innerHTML = (
+              parseInt(roomTemp) / 100
+            ).toFixed(1);
 
-          if (document.getElementById(`${id}-sync`)) {
-            document.getElementById(`${id}-sync`).classList.remove('sync-fail');
-          }
-          if (isSynced === '0' || queueLen !== '0') {
+            document.getElementById(`${id}-setTemp`).innerHTML = (
+              parseInt(setTemp) / 100
+            ).toFixed(1);
+
+            document.getElementById(`${id}-mode`).value = ['C', 'D', 'E'][mode];
+            document.getElementById(`${id}-speed`).value = ['F', 'G', 'H'][
+              speed
+            ];
+
             if (document.getElementById(`${id}-sync`)) {
-              document.getElementById(`${id}-sync`).style.display = 'block';
+              document
+                .getElementById(`${id}-sync`)
+                .classList.remove('sync-fail');
+            }
+            if (isSynced === '0' || queueLen !== '0') {
+              if (document.getElementById(`${id}-sync`)) {
+                document.getElementById(`${id}-sync`).style.display = 'block';
+              }
+            } else {
+              if (document.getElementById(`${id}-sync`)) {
+                document.getElementById(`${id}-sync`).style.display = 'none';
+              }
             }
           } else {
             if (document.getElementById(`${id}-sync`)) {
-              document.getElementById(`${id}-sync`).style.display = 'none';
+              document.getElementById(`${id}-sync`).classList.add('sync-fail');
+              document.getElementById(`${id}-sync`).style.display = 'block';
             }
+            document
+              .getElementById(`${id}-on`)
+              .classList.remove('on-off-active');
+            document
+              .getElementById(`${id}-off`)
+              .classList.remove('on-off-active');
+            document.getElementById(`${id}-roomTemp`).innerHTML = '--.-';
+            document.getElementById(`${id}-setTemp`).innerHTML = '--.-';
+            document.getElementById(`${id}-mode`).value = '-';
+            document.getElementById(`${id}-speed`).value = '-';
           }
-        } else {
-          if (document.getElementById(`${id}-sync`)) {
-            document.getElementById(`${id}-sync`).classList.add('sync-fail');
-            document.getElementById(`${id}-sync`).style.display = 'block';
-          }
-          document.getElementById(`${id}-on`).classList.remove('on-off-active');
-          document
-            .getElementById(`${id}-off`)
-            .classList.remove('on-off-active');
-          document.getElementById(`${id}-roomTemp`).innerHTML = '--.-';
-          document.getElementById(`${id}-setTemp`).innerHTML = '--.-';
-          document.getElementById(`${id}-mode`).value = '-';
-          document.getElementById(`${id}-speed`).value = '-';
         }
       }
     </script>
