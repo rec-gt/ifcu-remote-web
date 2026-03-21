@@ -157,9 +157,10 @@
           setTemp: '',
           roomTemp: '',
           isSynced: '',
+          isConnected: '',
         },
       ];
-      
+
       const database_clone = [
         {
           id: 'ifcu-001',
@@ -194,11 +195,16 @@
         try {
           for (const device of database) {
             const { id, ip } = device;
-            const data = await fetch(`http://${ip}/get`);
-            const jsonData = await data.json();
-            const { onOff, mode, speed, setTemp, roomTemp, isSynced } =
-              jsonData;
-            renderData(id, onOff, mode, speed, setTemp, roomTemp, isSynced);
+            await fetch(`http://${ip}/get`)
+              .then((res) => {
+                return res.json();
+              })
+              .then((data) => {
+                renderData({ id, ...data, isConnected: true });
+              })
+              .catch((err) => {
+                renderData({ id, isConnected: false });
+              });
           }
         } catch (error) {
           console.error('Error in cmd:', error);
@@ -282,7 +288,16 @@
         }
       }
 
-      function renderData(id, onOff, mode, speed, setTemp, roomTemp, isSynced) {
+      function renderData({
+        id,
+        onOff,
+        mode,
+        speed,
+        setTemp,
+        roomTemp,
+        isSynced,
+        isConnected,
+      }) {
         if (onOff === '1') {
           document.getElementById(`${id}-on`).classList.add('on-off-active');
           document
@@ -314,6 +329,9 @@
           if (document.getElementById(`${id}-sync`)) {
             document.getElementById(`${id}-sync`).style.display = 'block';
           }
+        }
+
+        if (!isConnected) {
         }
       }
     </script>
