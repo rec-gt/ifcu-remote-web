@@ -184,7 +184,8 @@
       async function setCmd(id, cmd) {
         const idx = database.findIndex((e) => e.id === id);
         if (idx > -1) {
-          const { ip } = database[idx];
+          const device = database[idx];
+          const { ip } = device;
           await fetch(`http://${ip}/set?cmd=${cmd}`);
         }
       }
@@ -199,17 +200,35 @@
         try {
           for (const device of database) {
             const { id, ip } = device;
+
             await fetch(`http://${ip}/get`, {
-              signal: AbortSignal.timeout(3000),
+              signal: AbortSignal.timeout(10000),
             })
-              .then((res) => {
-                return res.json();
+              .then(async (res) => {
+                const jsonData = await res.json();
+                return jsonData;
               })
               .then((data) => {
-                renderData({ id, ...data, isConnected: true });
+                const isConnected = true;
+                Object.assign(device, { ...data, isConnected });
+
+                if (data.modbusComm !== '1') {
+                  device.isConnected = false;
+                }
+
+                renderData({
+                  id,
+                  ...data,
+                  isConnected: device.isConnected,
+                });
               })
               .catch((err) => {
-                renderData({ id, isConnected: false });
+                const isConnected = false;
+                Object.assign(device, { isConnected });
+                renderData({ id, isConnected: device.isConnected });
+              })
+              .finally(() => {
+                console.table(device);
               });
           }
         } catch (error) {
@@ -269,7 +288,7 @@
                   <div class="center">
                     <div class="center" style="height: 50px">
                       <select id="${id}-mode" class="mode" onchange="setCmd('${id}',this.value)">
-                        <option value="-">-</option>
+                        <option hidden value="-">-</option>
                         <option value="C">Auto</option>
                         <option value="D">Manual</option>
                         <option value="E">Fan</option>
@@ -280,7 +299,7 @@
                   <div class="center">
                     <div class="center" style="height: 50px">
                       <select id="${id}-speed" class="fan-speed" onchange="setCmd('${id}',this.value)">
-                        <option value="-">-</option>
+                        <option hidden value="-">-</option>
                         <option value="F">Low</option>
                         <option value="G">Medium</option>
                         <option value="H">High</option>
@@ -335,7 +354,7 @@
           if (document.getElementById(`${id}-sync`)) {
             document.getElementById(`${id}-sync`).classList.remove('sync-fail');
           }
-          if (isSynced === '1') {
+          if (isSynced === '1' || queueLen !== '0') {
             if (document.getElementById(`${id}-sync`)) {
               document.getElementById(`${id}-sync`).style.display = 'none';
             }
